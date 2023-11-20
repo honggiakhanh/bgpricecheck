@@ -24,10 +24,7 @@ const SearchResults = async ({ params }: { params: { keyword: string } }) => {
       {products.map((store: any) => (
         <div className="overflow-x-auto">
           <h2>{store.store}</h2>
-          <div className="grid gap-8 grid-flow-col">
-            {/* {store.products?.map((product: any, i: number) => {
-              return <div>{i+1}: {product.name} / {product.price}</div>;
-            })} */}
+          <div className="grid gap-8 grid-flow-col justify-start">
             {store.products?.map((product: any, i: number) => {
               return (
                 <Card
@@ -35,9 +32,8 @@ const SearchResults = async ({ params }: { params: { keyword: string } }) => {
                   className="w-[200px] h-[300px] flex flex-col justify-between"
                 >
                   <CardHeader>
-                    <CardTitle>{product.name}</CardTitle>
+                    <CardTitle className="text-xl bg-red-200">{product.name}</CardTitle>
                     <Avatar>
-                      <p>placeholder for img</p>
                     </Avatar>
                   </CardHeader>
                   <CardFooter className="flex justify-between">

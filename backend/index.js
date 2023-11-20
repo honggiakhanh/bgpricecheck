@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const stores = require("./stores");
 
-const main = async (keyword) => {
+const search = async (keyword) => {
   let browser = await puppeteer.launch({ headless: false });
   let response = [];
 
@@ -20,6 +20,31 @@ const main = async (keyword) => {
       continue;
     }
 
+    async function scrollPage() {
+      await page.evaluate(async () => {
+        await new Promise((resolve, reject) => {
+          let totalHeight = 0;
+          const distance = 100;
+          const delay = 20; // Adjust delay if necessary
+
+          const scrollInterval = setInterval(() => {
+            const scrollHeight = document.body.scrollHeight;
+            window.scrollBy(0, distance);
+            totalHeight += distance;
+
+            if (totalHeight >= scrollHeight) {
+              // You can adjust the max scroll height here
+              clearInterval(scrollInterval);
+              resolve();
+            }
+          }, delay);
+        });
+      });
+    }
+
+    // Scroll the page
+    await scrollPage();
+
     const productData = await page.evaluate((store) => {
       const productItem = Array.from(
         document.querySelectorAll(store.selectors.product)
@@ -28,12 +53,20 @@ const main = async (keyword) => {
         const name =
           item
             .querySelector(store.selectors.product_name)
-            ?.textContent?.trim() || "N/A";
+            ?.textContent?.trim() || "null";
         const price =
           item
             .querySelector(store.selectors.product_price)
-            ?.textContent?.trim() || "N/A";
-        return { name, price };
+            ?.textContent?.trim() || "null";
+        const image =
+          item
+            .querySelector(store.selectors.product_img)
+            ?.getAttribute("src") || "null";
+        const link =
+          item
+            .querySelector(store.selectors.product_link)
+            ?.getAttribute("href") || "null";
+        return { name, price, image, link };
       });
     }, store);
 
@@ -43,7 +76,6 @@ const main = async (keyword) => {
   }
 
   await browser.close();
-  console.log(response);
   return response;
 };
 
@@ -53,7 +85,7 @@ app.get("/", (req, res) => {
 
 app.get("/search/:keyword", async (req, res) => {
   const keyword = req.params.keyword;
-  res.json(await main(keyword));
+  res.json(await search(keyword));
 });
 
 app.listen(3001, () => {
