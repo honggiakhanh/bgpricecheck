@@ -2,9 +2,10 @@ const puppeteer = require("puppeteer");
 const express = require("express");
 const app = express();
 const stores = require("./stores");
+const { URL } = require("url");
 
 const search = async (keyword) => {
-  let browser = await puppeteer.launch({ headless: false });
+  let browser = await puppeteer.launch({ headless: true });
   let response = [];
 
   console.log("searching for: " + keyword);
@@ -13,7 +14,7 @@ const search = async (keyword) => {
     const page = await browser.newPage();
     try {
       await page.goto(`${store.searchUrl}${keyword}`);
-      await page.waitForSelector(store.selectors.product, { timeout: 5000 });
+      await page.waitForSelector(store.selectors.product, { timeout: 10000 });
     } catch (error) {
       console.log(`Can't find selector within timeout`);
       response.push({ store: store.name, products: [] });
@@ -58,15 +59,26 @@ const search = async (keyword) => {
           item
             .querySelector(store.selectors.product_price)
             ?.textContent?.trim() || "null";
-        const image =
+        const imageLink =
           item
             .querySelector(store.selectors.product_img)
             ?.getAttribute("src") || "null";
-        const link =
+        const productLink =
           item
             .querySelector(store.selectors.product_link)
             ?.getAttribute("href") || "null";
-        return { name, price, image, link };
+        let fullImageLink, fullProductLink;
+        try {
+          fullImageLink = new URL(imageLink);
+        } catch (error) {
+          fullImageLink = new URL(imageLink, store.baseUrl);
+        }
+        try {
+          fullProductLink = new URL(productLink);
+        } catch (error) {
+          fullProductLink = new URL(productLink, store.baseUrl);
+        }
+        return { name, price, fullImageLink: fullImageLink.href , fullProductLink: fullProductLink.href };
       });
     }, store);
 

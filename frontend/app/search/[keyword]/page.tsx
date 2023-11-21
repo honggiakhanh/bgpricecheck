@@ -37,7 +37,7 @@ const SearchResults = async ({ params }: { params: { keyword: string } }) => {
                     </Avatar>
                   </CardHeader>
                   <CardFooter className="flex justify-between">
-                    <Button>link</Button>
+                    <Button><a href={product.link} target="_blank">Visit</a></Button>
                     <p>{product.price}</p>
                   </CardFooter>
                 </Card>

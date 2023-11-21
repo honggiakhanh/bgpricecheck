@@ -37,16 +37,16 @@ module.exports = [
       product_link: "a[title]",
     },
   },
-  {
-    name: "puolenkuunpelit",
-    baseUrl: "https://www.puolenkuunpelit.com/kauppa/",
-    searchUrl: "https://www.puolenkuunpelit.com/kauppa/advanced_search_result.php?keywords=",
-    selectors: {
-      product: 'tr[class=""]',
-      product_name: 'td[class="productListing-data"] > a > b',
-      product_price: "b.commonPrice",
-      product_img: "td.productListing-data:nth-child(1) > a > img",
-      product_link: 'td.productListing-data:nth-child(1) > a',
-    },
-  }
+  // {
+  //   name: "puolenkuunpelit",
+  //   baseUrl: "https://www.puolenkuunpelit.com/kauppa/",
+  //   searchUrl: "https://www.puolenkuunpelit.com/kauppa/advanced_search_result.php?keywords=",
+  //   selectors: {
+  //     product: 'tr[class=""]',
+  //     product_name: 'td[class="productListing-data"] > a > b',
+  //     product_price: "b.commonPrice",
+  //     product_img: "td.productListing-data:nth-child(1) > a > img",
+  //     product_link: 'td.productListing-data:nth-child(1) > a',
+  //   },
+  // }
 ];
