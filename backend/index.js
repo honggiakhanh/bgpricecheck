@@ -1,8 +1,11 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-extra");
 const express = require("express");
 const app = express();
 const stores = require("./stores");
 const { URL } = require("url");
+
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+puppeteer.use(StealthPlugin());
 
 const search = async (keyword) => {
   let browser = await puppeteer.launch({ headless: true });
@@ -78,7 +81,12 @@ const search = async (keyword) => {
         } catch (error) {
           fullProductLink = new URL(productLink, store.baseUrl);
         }
-        return { name, price, fullImageLink: fullImageLink.href , fullProductLink: fullProductLink.href };
+        return {
+          name,
+          price,
+          fullImageLink: fullImageLink.href,
+          fullProductLink: fullProductLink.href,
+        };
       });
     }, store);
 
