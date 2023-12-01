@@ -21,7 +21,9 @@ interface Product {
 }
 
 const getBoardgame = async (keyword: string) => {
-  const data = await fetch(`http://localhost:3001/search/${keyword}`);
+  const data = await fetch(`http://localhost:3001/search/${keyword}`, {
+    cache: "no-store",
+  });
   const result = await data.json();
 
   return result;
@@ -47,22 +49,22 @@ const SearchResults = async ({ params }: { params: { keyword: string } }) => {
                       {product.name}
                     </CardTitle>
                   </CardHeader>
-                    <CardContent>
-                      <Image
-                        src={product.fullImageLink}
-                        alt={product.name}
-                        width={50}
-                        height={50}
-                      />
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button>
-                        <a href={product.fullProductLink} target="_blank">
-                          Visit
-                        </a>
-                      </Button>
-                      <p>{product.price}</p>
-                    </CardFooter>
+                  <CardContent>
+                    <Image
+                      src={product.fullImageLink}
+                      alt={product.name}
+                      width={50}
+                      height={50}
+                    />
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <Button>
+                      <a href={product.fullProductLink} target="_blank">
+                        Visit
+                      </a>
+                    </Button>
+                    <p>{product.price}</p>
+                  </CardFooter>
                 </Card>
               );
             })}
