@@ -29,7 +29,7 @@ const search = async (keyword) => {
         await new Promise((resolve, reject) => {
           let totalHeight = 0;
           const distance = 100;
-          const delay = 20; // Adjust delay if necessary
+          const delay = 20;
 
           const scrollInterval = setInterval(() => {
             const scrollHeight = document.body.scrollHeight;
@@ -37,7 +37,6 @@ const search = async (keyword) => {
             totalHeight += distance;
 
             if (totalHeight >= scrollHeight) {
-              // You can adjust the max scroll height here
               clearInterval(scrollInterval);
               resolve();
             }
@@ -46,7 +45,6 @@ const search = async (keyword) => {
       });
     }
 
-    // Scroll the page
     await scrollPage();
 
     const productData = await page.evaluate((store) => {
@@ -90,8 +88,10 @@ const search = async (keyword) => {
       });
     }, store);
 
+    if (store.name === "puolenkuunpelit") {
+      productData.shift();
+    }
     response.push({ store: store.name, products: productData });
-
     await page.close();
   }
 
